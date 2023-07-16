@@ -174,7 +174,12 @@ export default function MainLayout() {
             />
           </StyledNavlink>
 
-          <StyledNavlink to="/notifications">
+          <StyledNavlink to="/notifications" onClick={() => {
+            appContext.setContextData({
+              ...appContext.contextData,
+              notifications: [],
+            });
+          }}>
             <Badge
               color="primary"
               badgeContent={(appContext.contextData.notifications || []).length}

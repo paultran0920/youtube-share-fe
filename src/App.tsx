@@ -25,6 +25,8 @@ import {
 } from "./persistent/access-token-util";
 import { fetchUserProfile } from "./persistent/account-api";
 import { ShareNewVideo } from "./components/shared-videos/share-video-new";
+import { connectWs, disconnectWs, listenSharedVideoEvent } from "./utils/common";
+import { NotificationDto } from "./models/notification-models";
 
 function ProtectedRoute(props: any) {
   const accessToken = loadAccessToken();
@@ -39,6 +41,7 @@ function App() {
   const [contextData, setContextData] =
     useState<ContextDataType>(defaultContext);
   const [loading, setLoading] = useState(true);
+  const [newEvent, setNewEvent] = useState<NotificationDto>();
 
   useEffect(() => {
     const initApp = async () => {
@@ -50,15 +53,40 @@ function App() {
             ...contextData,
             currentUser: user,
           });
+
+          await connectWs();
         } catch (err) {
           deleteAccessToken();
         }
       }
+
+      await listenSharedVideoEvent(setNewEvent);
     };
 
     initApp().finally(() => setLoading(false));
+
+    return () => {
+      disconnectWs();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!newEvent) {
+      return;
+    }
+    const currentNotifications = contextData.notifications;
+    if (!currentNotifications?.find((video) => video.id === newEvent.id)) {
+      const newNotifications = [newEvent, ...(currentNotifications || [])];
+      const message = `${newEvent.sharedUser} just shared a new video: ${newEvent.videoTitle}.`;
+      setContextData({
+        ...contextData,
+        message: message,
+        notifications: newNotifications,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ newEvent ]);
 
   return (
     <ThemeProvider theme={CustomizedTheme}>
@@ -143,7 +171,7 @@ function App() {
                         contextData={contextData}
                         setContextData={setContextData}
                       >
-                        <Dashboard />
+                        <SharedVideos />
                       </ProtectedRoute>
                     }
                   />

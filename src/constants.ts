@@ -1,3 +1,5 @@
+export const APP_SHARED_VIDEO_TOPIC = 'shared-video';
+
 export const APP_EVENTS = {
   EVENT_LOADING: 'EVENT_LOADING',
   EVENT_SHOW_MODAL: 'EVENT_LOADING',

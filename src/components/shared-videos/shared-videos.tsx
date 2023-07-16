@@ -19,7 +19,6 @@ export function SharedVideos() {
     const criteria = new BaseCriteria(newSearchCriteria, newPage, 100);
     const datas = await fetchSharedVideos(criteria);
 
-    console.log(datas);
     setVideos(datas.items);
   };
 

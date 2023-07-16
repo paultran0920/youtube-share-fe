@@ -4,7 +4,10 @@ import {
   loadAccessToken,
 } from '../persistent/access-token-util';
 import { CustomEventEmitter } from './event-emitter';
-
+import { appSocket } from '../socket';
+import { APP_SHARED_VIDEO_TOPIC } from '../constants';
+import { NotificationDto } from '../models/notification-models';
+import { logInfo } from '../logs/logger';
 export const appEventEmitter = new CustomEventEmitter();
 
 export const setupAxiosInterceptors = async () => {
@@ -28,3 +31,35 @@ export const setupAxiosInterceptors = async () => {
     }
   );
 };
+
+export const connectWs = async () => {
+  if (!appSocket.connected) {
+    appSocket.connect();
+
+    logInfo('Connected to socket server');
+  }
+}
+
+export const notifyNewSharedVideo = async (data: NotificationDto) => {
+  if (appSocket.connected) {
+    appSocket.emit(APP_SHARED_VIDEO_TOPIC, data);
+
+    logInfo('Just sent a new shared video notification');
+  }
+}
+
+export const listenSharedVideoEvent = async (cb: (data: NotificationDto) => void) => {
+  if (!appSocket.listeners(APP_SHARED_VIDEO_TOPIC).length) {
+    appSocket.on(APP_SHARED_VIDEO_TOPIC, cb);
+    logInfo('Just registered a new shared video event listener');
+  }
+}
+
+export const disconnectWs = async () => {
+  if (appSocket.connected) {
+    logInfo('Disconnecting from socket server');
+
+    appSocket.off(APP_SHARED_VIDEO_TOPIC);
+    appSocket.disconnect();
+  }
+}

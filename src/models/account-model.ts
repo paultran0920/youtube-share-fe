@@ -3,7 +3,6 @@ import { BaseDto, Role } from './base-models';
 export enum AccountStatus {
   Pending = 'Pending',
   Activated = 'Activated',
-  Student = 'Disabled',
 }
 
 export interface AccountDto extends BaseDto {

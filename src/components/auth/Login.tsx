@@ -15,13 +15,14 @@ import { Formik } from "formik";
 import { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { AppContext } from "../../context/app-context";
-import { logError } from "../../logs/logger";
+import { logDebug, logError } from "../../logs/logger";
 import {
   loadRememberMe,
   saveRememberMe,
 } from "../../persistent/access-token-util";
 import { fetchUserProfile } from "../../persistent/account-api";
 import { login } from "../../persistent/authentication-api";
+import { connectWs } from "../../utils/common";
 import { StyledNavlink, StyledTypography } from "../shared/styled-components";
 
 const validateField = (values: any) => {
@@ -63,6 +64,17 @@ export default function Login() {
             errorMessage: `Can not fetch user info for!`,
           });
         }
+      }
+
+      try {
+        await connectWs();
+        logDebug("Connected to websocket server!");
+      } catch (err) {
+        logError(err);
+        setContextData({
+          ...contextData,
+          errorMessage: `Authenticated but can not connect to web socket server for even notifying!`,
+        });
       }
     } catch (err) {
       if (err) {

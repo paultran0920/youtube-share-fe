@@ -1,24 +1,50 @@
 import { LoadingButton } from "@mui/lab";
 import { Grid, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../context/app-context";
+import { logError } from "../../logs/logger";
 import { shareVideo } from "../../persistent/youtube-api";
+import { notifyNewSharedVideo } from "../../utils/common";
 import { BackButton } from "../shared/back-button";
 import { CardType, CustomCard } from "../shared/custom-card";
-import { BoxRow, StyledTextField, StyledTypography } from "../shared/styled-components";
+import {
+  BoxRow,
+  StyledTextField,
+  StyledTypography,
+} from "../shared/styled-components";
 
 export function ShareNewVideo() {
+  const { contextData, setContextData } = useContext(AppContext);
   const theme = useTheme();
-  const [isSubmitting, setSubmitting] = useState(false)
+  const [isSubmitting, setSubmitting] = useState(false);
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
 
   const shareVideoHandler = async () => {
     setSubmitting(true);
-    await shareVideo(url);
-    setSubmitting(false);
-    navigate("/shared-videos");
+    try {
+      const videoInfo = await shareVideo(url);
+      await notifyNewSharedVideo({
+        id: videoInfo.id,
+        videoUrl: videoInfo.url,
+        videoTitle: videoInfo.title,
+        thumbnailUrl: videoInfo.thumbnailUrl,
+        sharedUser: contextData.currentUser!.profile.name,
+      })
+      navigate("/shared-videos");
+    } catch (error: any) {
+      if (error) {
+        logError(error);
+        setContextData({
+          ...contextData,
+          errorMessage: `Can not share new video URL!`,
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -42,8 +68,8 @@ export function ShareNewVideo() {
         />
         <StyledTypography
           sx={{
-            fontSize: '24px',
-            fontWeight: 'bold',
+            fontSize: "24px",
+            fontWeight: "bold",
           }}
         >
           Share New Video
@@ -68,7 +94,12 @@ export function ShareNewVideo() {
         }}
       >
         <Box sx={{ flexGrow: 1, padding: theme.spacing(1) }}>
-          <Grid container spacing={1} columnGap={theme.spacing(2)}>
+          <Grid
+            container
+            spacing={1}
+            columnGap={theme.spacing(2)}
+            rowGap={theme.spacing(2)}
+          >
             <StyledTextField
               id="youtube-url"
               placeholder="New Youtube Video URL"

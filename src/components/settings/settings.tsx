@@ -4,6 +4,7 @@ import { Box } from '@mui/system';
 import { useContext, useState } from 'react';
 import { AppContext } from '../../context/app-context';
 import { logout } from '../../persistent/authentication-api';
+import { disconnectWs } from '../../utils/common';
 import { BoxRow, StyledTypography } from '../shared/styled-components';
 import { AccountInformation } from './account-information';
 
@@ -15,6 +16,7 @@ export function Settings() {
   const onLogoutHandeller = async () => {
     setLogoutState(true);
     await logout();
+    await disconnectWs();
     document.location.reload();
   };
 
