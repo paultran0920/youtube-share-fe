@@ -69,6 +69,9 @@ export const StyledLink = styled(Link)(
   {
     textDecoration: 'none',
     color: 'inherit',
+    ':hover': {
+      textDecoration: 'underline',
+    }
   },
   (props: any) => ({
     width: props.width ? (props.width as string) : undefined,

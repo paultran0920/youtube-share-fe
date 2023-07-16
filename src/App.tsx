@@ -1,28 +1,30 @@
-import { Backdrop, CircularProgress } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { Backdrop, CircularProgress } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 import {
   HashRouter as Router,
   Navigate,
   Route,
-  Routes
-} from 'react-router-dom';
-import Login from './components/auth/Login';
-import { Dashboard } from './components/Dashboard';
-import MainLayout from './components/MainLayout';
-import { Settings } from './components/settings/settings';
-import { SystemInfo } from './components/shared/system-info';
+  Routes,
+} from "react-router-dom";
+import Login from "./components/auth/Login";
+import { Dashboard } from "./components/Dashboard";
+import MainLayout from "./components/MainLayout";
+import { Settings } from "./components/settings/settings";
+import { SystemInfo } from "./components/shared/system-info";
+import { SharedVideos } from "./components/shared-videos/shared-videos";
 import {
   AppContext,
   ContextDataType,
-  defaultContext
-} from './context/app-context';
-import { CustomizedTheme } from './youtube-share-theme';
+  defaultContext,
+} from "./context/app-context";
+import { CustomizedTheme } from "./youtube-share-theme";
 import {
   deleteAccessToken,
-  loadAccessToken
-} from './persistent/access-token-util';
-import { fetchUserProfile } from './persistent/account-api';
+  loadAccessToken,
+} from "./persistent/access-token-util";
+import { fetchUserProfile } from "./persistent/account-api";
+import { ShareNewVideo } from "./components/shared-videos/share-video-new";
 
 function ProtectedRoute(props: any) {
   const accessToken = loadAccessToken();
@@ -106,28 +108,28 @@ function App() {
                     }
                   />
 
-                  <Route path="/shared-video">
+                  <Route path="/shared-videos">
                     <Route
                       index
                       element={
                         <ProtectedRoute
-                          key="/shared-video"
+                          key="/shared-videos"
                           contextData={contextData}
                           setContextData={setContextData}
                         >
-                          <Dashboard />
+                          <SharedVideos />
                         </ProtectedRoute>
                       }
                     />
                     <Route
-                      path="/shared-video/:id"
+                      path="/shared-videos/share"
                       element={
                         <ProtectedRoute
-                          key="/shared-video/view"
+                          key="/shared-videos/share"
                           contextData={contextData}
                           setContextData={setContextData}
                         >
-                          <Dashboard />
+                          <ShareNewVideo />
                         </ProtectedRoute>
                       }
                     />
