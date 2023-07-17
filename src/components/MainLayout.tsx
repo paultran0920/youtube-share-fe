@@ -174,7 +174,7 @@ export default function MainLayout() {
             />
           </StyledNavlink>
 
-          <StyledNavlink to="/notifications" onClick={() => {
+          <StyledNavlink to="/shared-videos" onClick={() => {
             appContext.setContextData({
               ...appContext.contextData,
               notifications: [],

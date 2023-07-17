@@ -162,19 +162,6 @@ function App() {
                       }
                     />
                   </Route>
-
-                  <Route
-                    path="/notifications"
-                    element={
-                      <ProtectedRoute
-                        key="/notifications"
-                        contextData={contextData}
-                        setContextData={setContextData}
-                      >
-                        <SharedVideos />
-                      </ProtectedRoute>
-                    }
-                  />
                 </Route>
               </Routes>
             </Router>

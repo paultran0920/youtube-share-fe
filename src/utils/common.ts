@@ -3,12 +3,10 @@ import {
   deleteAccessToken,
   loadAccessToken,
 } from '../persistent/access-token-util';
-import { CustomEventEmitter } from './event-emitter';
 import { appSocket } from '../socket';
 import { APP_SHARED_VIDEO_TOPIC } from '../constants';
 import { NotificationDto } from '../models/notification-models';
 import { logInfo } from '../logs/logger';
-export const appEventEmitter = new CustomEventEmitter();
 
 export const setupAxiosInterceptors = async () => {
   axios.interceptors.request.use((config) => {

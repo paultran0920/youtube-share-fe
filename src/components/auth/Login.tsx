@@ -266,7 +266,7 @@ export default function Login() {
                     }}
                   >
                     <StyledNavlink
-                      to="/forgot-password"
+                      to="/#"
                       sx={{
                         "&:hover": {
                           textDecoration: "underline !important",
