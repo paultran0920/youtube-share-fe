@@ -124,7 +124,7 @@ export default function Login() {
             fontWeight: "bold",
           }}
         >
-          Remitano Interview Round 2
+          Youtube Video Sharing
         </StyledTypography>
       </Box>
 

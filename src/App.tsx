@@ -8,8 +8,8 @@ import {
   Routes,
 } from "react-router-dom";
 import Login from "./components/auth/Login";
-import { Dashboard } from "./components/Dashboard";
-import MainLayout from "./components/MainLayout";
+import { Dashboard } from "./components/dashboard";
+import MainLayout from "./components/main.layout";
 import { Settings } from "./components/settings/settings";
 import { SystemInfo } from "./components/shared/system-info";
 import { SharedVideos } from "./components/shared-videos/shared-videos";
